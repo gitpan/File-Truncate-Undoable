@@ -1,0 +1,80 @@
+NAME
+    File::Truncate::Undoable - Truncate a file, with undo support
+
+VERSION
+    version 0.01
+
+SEE ALSO
+    Rinci::Transaction
+
+DESCRIPTION
+    This module has Rinci metadata.
+
+FUNCTIONS
+    None are exported by default, but they are exportable.
+
+  truncate(%args) -> [status, msg, result, meta]
+    Truncate a file, with undo support.
+
+    On do, will trash file then create an empty file (with the same
+    permission and ownership as the original). On undo, will trash the new
+    file and untrash the old file.
+
+    Note: chown will not be done if we are not running as root. Symlink is
+    currently not permitted.
+
+    Fixed state: file exists and size is not zero.
+
+    Fixable state: file exists and size is not zero.
+
+    Unfixable state: file does not exist or path is not a regular file
+    (directory and symlink included).
+
+    This function is idempotent (repeated invocations with same arguments
+    has the same effect as single invocation). This function supports
+    transactions.
+
+    Arguments ('*' denotes required arguments):
+
+    *   path* => *str*
+
+    Special arguments:
+
+    *   -tx_action => *str*
+
+        For more information on transaction, see Rinci::Transaction.
+
+    *   -tx_action_id => *str*
+
+        For more information on transaction, see Rinci::Transaction.
+
+    *   -tx_recovery => *str*
+
+        For more information on transaction, see Rinci::Transaction.
+
+    *   -tx_rollback => *str*
+
+        For more information on transaction, see Rinci::Transaction.
+
+    *   -tx_v => *str*
+
+        For more information on transaction, see Rinci::Transaction.
+
+    Return value:
+
+    Returns an enveloped result (an array). First element (status) is an
+    integer containing HTTP status code (200 means OK, 4xx caller error, 5xx
+    function error). Second element (msg) is a string containing error
+    message, or 'OK' if status is 200. Third element (result) is optional,
+    the actual result. Fourth element (meta) is called result metadata and
+    is optional, a hash that contains extra information.
+
+AUTHOR
+    Steven Haryanto <stevenharyanto@gmail.com>
+
+COPYRIGHT AND LICENSE
+    This software is copyright (c) 2012 by Steven Haryanto.
+
+    This is free software; you can redistribute it and/or modify it under
+    the same terms as the Perl 5 programming language system itself.
+
