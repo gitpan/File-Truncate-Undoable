@@ -9,7 +9,7 @@ use lib $Bin, "$Bin/t";
 
 use File::chdir;
 use File::Path qw(remove_tree);
-use File::Slurp;
+use File::Slurp::Tiny qw(read_file write_file);
 use File::Temp qw(tempdir);
 use File::Truncate::Undoable;
 use Test::More 0.98;
@@ -49,7 +49,7 @@ test_tx_action(
         symlink "q", "p";
     },
     status        => 412,
-) if symlink("", "");
+) if eval { symlink "", ""; 1 };
 test_tx_action(
     name          => "path is an empty file -> noop",
     tmpdir        => $tmpdir,

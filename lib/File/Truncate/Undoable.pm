@@ -1,13 +1,13 @@
 package File::Truncate::Undoable;
 
-use 5.010;
+use 5.010001;
 use strict;
 use warnings;
 use Log::Any '$log';
 
 use File::Trash::Undoable;
 
-our $VERSION = '0.01'; # VERSION
+our $VERSION = '0.02'; # VERSION
 
 our %SPEC;
 
@@ -62,8 +62,8 @@ sub truncate {
 
     if ($tx_action eq 'check_state') {
         return [412, "File $path does not exist"]        unless $exists;
-        return [500, "File $path can't be stat'd"]       unless @st;
         return [412, "File $path is not a regular file"] if $is_sym||!$is_file;
+        return [500, "File $path can't be stat'd"]       unless @st;
         return [304, "File $path is already truncated"]  if $is_zero;
 
         $log->info("(DRY) Truncating file $path ...") if $dry_run;
@@ -90,9 +90,11 @@ sub truncate {
 1;
 # ABSTRACT: Truncate a file, with undo support
 
-
 __END__
+
 =pod
+
+=encoding UTF-8
 
 =head1 NAME
 
@@ -100,21 +102,10 @@ File::Truncate::Undoable - Truncate a file, with undo support
 
 =head1 VERSION
 
-version 0.01
-
-=head1 SEE ALSO
-
-L<Rinci::Transaction>
-
-=head1 DESCRIPTION
-
-
-This module has L<Rinci> metadata.
+This document describes version 0.02 of File::Truncate::Undoable (from Perl distribution File-Truncate-Undoable), released on 2014-05-17.
 
 =head1 FUNCTIONS
 
-
-None are exported by default, but they are exportable.
 
 =head2 truncate(%args) -> [status, msg, result, meta]
 
@@ -173,7 +164,34 @@ For more information on transaction, see L<Rinci::Transaction>.
 
 Return value:
 
-Returns an enveloped result (an array). First element (status) is an integer containing HTTP status code (200 means OK, 4xx caller error, 5xx function error). Second element (msg) is a string containing error message, or 'OK' if status is 200. Third element (result) is optional, the actual result. Fourth element (meta) is called result metadata and is optional, a hash that contains extra information.
+Returns an enveloped result (an array).
+
+First element (status) is an integer containing HTTP status code
+(200 means OK, 4xx caller error, 5xx function error). Second element
+(msg) is a string containing error message, or 'OK' if status is
+200. Third element (result) is optional, the actual result. Fourth
+element (meta) is called result metadata and is optional, a hash
+that contains extra information.
+
+=head1 SEE ALSO
+
+L<Rinci::Transaction>
+
+=head1 HOMEPAGE
+
+Please visit the project's homepage at L<https://metacpan.org/release/File-Truncate-Undoable>.
+
+=head1 SOURCE
+
+Source repository is at L<https://github.com/sharyanto/perl-File-Truncate-Undoable>.
+
+=head1 BUGS
+
+Please report any bugs or feature requests on the bugtracker website L<https://rt.cpan.org/Public/Dist/Display.html?Name=File-Truncate-Undoable>
+
+When submitting a bug or request, please include a test-file or a
+patch to an existing test-file that illustrates the bug or desired
+feature.
 
 =head1 AUTHOR
 
@@ -181,10 +199,9 @@ Steven Haryanto <stevenharyanto@gmail.com>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2012 by Steven Haryanto.
+This software is copyright (c) 2014 by Steven Haryanto.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-
